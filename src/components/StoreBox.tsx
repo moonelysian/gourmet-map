@@ -8,9 +8,10 @@ import {
   AiOutlinePhone,
 } from "react-icons/ai";
 import { HiOutlineMapPin } from "react-icons/hi2";
+import { StoreType } from "@/interface";
 
 interface StoreBoxProps {
-  store: any;
+  store: StoreType | null;
   setStore: Dispatch<SetStateAction<any>>;
 }
 export default function StoreBox({ store, setStore }: StoreBoxProps) {

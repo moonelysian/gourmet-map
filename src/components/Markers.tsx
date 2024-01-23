@@ -1,8 +1,7 @@
-/* global kakao */
-import { useEffect, useCallback, Dispatch, SetStateAction } from "react";
+import { useEffect, useCallback } from "react";
 import { StoreType } from "@/interface";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { mapState, currentStoreState } from "@/atom";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import { mapState, currentStoreState, locationState } from "@/atom";
 
 interface MarkersProps {
   stores: StoreType[];
@@ -11,6 +10,7 @@ interface MarkersProps {
 export default function Markers({ stores }: MarkersProps) {
   const map = useRecoilValue(mapState);
   const setCurrentStore = useSetRecoilState(currentStoreState);
+  const [location, setLocation] = useRecoilState(locationState);
 
   const loadKakaoMarkers = useCallback(() => {
     // 식당 데이터 가져오기
@@ -67,6 +67,11 @@ export default function Markers({ stores }: MarkersProps) {
       //선택한 가게 저장
       window.kakao.maps.event.addListener(marker, "click", function () {
         setCurrentStore(store);
+        setLocation({
+          ...location,
+          lat: store.lat,
+          lng: store.lng,
+        });
       });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

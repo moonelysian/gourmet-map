@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, useState } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import axios from "axios";
 import { useInfiniteQuery } from "react-query";
 
@@ -8,20 +8,17 @@ import Loading from "@/components/Loading";
 import StoreList from "@/components/StoreList";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import Loader from "@/components/Loader";
-import SearchFilter from "@/components/\bSearchFilter";
+import SearchFilter from "@/components/SearchFilter";
+
+import { useRecoilValue } from "recoil";
+import { searchState } from "@/atom";
 
 export default function StoreListPage() {
-  const [q, setQ] = useState<string | null>(null);
-  const [district, setDistrict] = useState<string | null>(null);
+  const searchParams = useRecoilValue(searchState);
 
   const ref = useRef<HTMLDivElement | null>(null);
   const pageRef = useIntersectionObserver(ref, {});
   const isPageEnd = !!pageRef?.isIntersecting;
-
-  const searchParams = {
-    q,
-    district,
-  };
 
   const fetchStores = async ({ pageParam = 1 }) => {
     const { data } = await axios("/api/stores?page=" + pageParam, {
@@ -77,7 +74,7 @@ export default function StoreListPage() {
   return (
     <div className="px-4 md:max-w-4xl mx-auto py-8">
       <ul role="list" className="divide-y divide-gray-100">
-        <SearchFilter setQ={setQ} setDistrict={setDistrict} />
+        <SearchFilter />
         {isLoading ? (
           <Loading />
         ) : (

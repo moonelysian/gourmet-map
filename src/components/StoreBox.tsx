@@ -63,7 +63,7 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
           </div>
           <button
             type="button"
-            onClick={() => alert("상세보기 작업중")}
+            onClick={() => router.push(`/stores/${store.id}`)}
             className="w-full bg-blue-700 hover:bg-blue-500 focus:bg-blue-500 py-3 text-white font-semibold rounded-b-lg"
           >
             상세보기

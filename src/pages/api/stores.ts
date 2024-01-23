@@ -13,7 +13,7 @@ interface ResponseType {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<StoreApiResponse | StoreType[] | StoreType>
+  res: NextApiResponse<StoreApiResponse | StoreType[] | StoreType | null>
 ) {
   const { page = "", limit = "", q, district }: ResponseType = req.query;
 
@@ -33,6 +33,23 @@ export default async function handler(
     const result = await prisma.store.create({
       data: { ...formData, lat: data.documents[0].y, lng: data.documents[0].x },
     });
+    return res.status(200).json(result);
+  }
+
+  if (req.method === "PUT") {
+    const data = req.body;
+    const result = await prisma.store.update({
+      data: { ...data },
+      where: { id: data.id },
+    });
+    return res.status(200).json(result);
+  }
+
+  if (req.method === "DELETE") {
+    const { id }: { id?: string } = req.query;
+    if (!id) return res.status(500).json(null);
+
+    const result = await prisma.store.delete({ where: { id: parseInt(id) } });
     return res.status(200).json(result);
   }
 

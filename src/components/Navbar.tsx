@@ -1,31 +1,42 @@
 import { useState } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 import { BiMenu } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data, status } = useSession();
 
   return (
     <>
       <div className="navbar">
-        <Link href={"/"} className="navbar__logo">
+        <Link className="navbar__logo" href="/">
           gourmetmap
         </Link>
         <div className="navbar__list">
-          <Link href={"/stores"} className="navbar__list--item">
+          <Link href="/stores" className="navbar__list--item">
             맛집 목록
           </Link>
-          <Link href={"/stores/new"} className="navbar__list--item">
+          <Link href="/stores/new" className="navbar__list--item">
             맛집 등록
           </Link>
-          <Link href={"/users/likes"} className="navbar__list--item">
+          <Link href="/users/likes" className="navbar__list--item">
             찜한 가게
           </Link>
-          <Link href={"/users/login"} className="navbar__list--item">
-            로그인
+          <Link href="/users/mypage" className="navbar__list--item">
+            마이페이지
           </Link>
+          {status === "authenticated" ? (
+            <button type="button" onClick={() => signOut()}>
+              로그아웃
+            </button>
+          ) : (
+            <Link href="/users/login" className="navbar__list--item">
+              로그인
+            </Link>
+          )}
         </div>
         {/* mobile button */}
         <div
@@ -35,32 +46,62 @@ export default function Navbar() {
         >
           {isOpen ? <AiOutlineClose /> : <BiMenu />}
         </div>
-        {/* mobile navbar */}
-        {isOpen && (
-          <div className="navbar--mobile">
-            <div className="navbar__list--mobile">
-              <Link href={"/stores"} className="navbar__list--item--mobile">
-                맛집 목록
-              </Link>
-              <Link href={"/stores/new"} className="navbar__list--item--mobile">
-                맛집 등록
-              </Link>
-              <Link
-                href={"/users/likes"}
-                className="navbar__list--item--mobile"
+      </div>
+      {/* mobile navbar */}
+      {isOpen && (
+        <div className="navbar--mobile">
+          <div className="navbar__list--mobile">
+            <Link
+              href="/stores"
+              className="navbar__list--item--mobile"
+              onClick={() => setIsOpen(false)}
+            >
+              맛집 목록
+            </Link>
+            <Link
+              href="/stores/new"
+              className="navbar__list--item--mobile"
+              onClick={() => setIsOpen(false)}
+            >
+              맛집 등록
+            </Link>
+            <Link
+              href="/users/likes"
+              className="navbar__list--item--mobile"
+              onClick={() => setIsOpen(false)}
+            >
+              찜한 가게
+            </Link>
+            <Link
+              href="/users/mypage"
+              className="navbar__list--item--mobile"
+              onClick={() => setIsOpen(false)}
+            >
+              마이페이지
+            </Link>
+            {status === "authenticated" ? (
+              <button
+                type="button"
+                onClick={() => {
+                  signOut();
+                  setIsOpen(false);
+                }}
+                className="navbar__list--item--mobile text-left"
               >
-                찜한 가게
-              </Link>
+                로그아웃
+              </button>
+            ) : (
               <Link
-                href={"/users/login"}
+                href="/users/login"
                 className="navbar__list--item--mobile"
+                onClick={() => setIsOpen(false)}
               >
                 로그인
               </Link>
-            </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }

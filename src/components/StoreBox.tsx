@@ -11,6 +11,7 @@ import { HiOutlineMapPin } from "react-icons/hi2";
 import { StoreType } from "@/interface";
 import { useRecoilState } from "recoil";
 import { currentStoreState } from "@/atom";
+import Like from "./Like";
 
 interface StoreBoxProps {
   store: StoreType | null;
@@ -51,6 +52,7 @@ export default function StoreBox() {
                 <HiOutlineMapPin />
                 {store?.address || "주소가 없습니다."}
               </div>
+              <Like storeId={store.id} />
             </div>
             <div className="mt-2 flex gap-2 items-center">
               <AiOutlinePhone />
